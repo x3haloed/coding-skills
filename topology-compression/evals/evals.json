@@ -1,0 +1,41 @@
+{
+  "skill_name": "topology-compression",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We are migrating a mature admin application from an old MVC/Angular stack to Razor pages. In the new app, MediaBatchUploadService, ProofreadingImportParser, and DetailedAnalysisExporter are registered but have no callers. A quick search suggests deleting all three. The old app is available but poorly documented. Assess the best architectural move and give an execution plan; do not edit code.",
+      "expected_output": "The response treats no-current-caller as insufficient, maps legacy and external behavior before deletion, distinguishes missing migrations from genuine residue, defines preservation evidence, and proposes coherent per-workflow decisions rather than bulk deletion.",
+      "files": [],
+      "assertions": [
+        "Requires legacy or predecessor behavior inspection before declaring the services obsolete",
+        "Distinguishes dead topology from missing migration or external consumption",
+        "Defines a preservation envelope and evidence for each affected workflow",
+        "Avoids bundling all three deletions into one unsupported compression"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Our application has separate EssayApiController and InterviewApiController families used only by the first-party UI. Equivalent Razor pages and domain services now own those workflows. A published ExternalApiController must remain stable, as must authorization, tenant isolation, persisted score meaning, and candidate/rater UX. Propose the highest-value topology compression and how you would verify it; do not edit code.",
+      "expected_output": "The response identifies a complete collapse of the parallel first-party controller authorities while protecting the published API and behavioral boundaries, and proposes verification proportional to the claim.",
+      "files": [],
+      "assertions": [
+        "Names the duplicate first-party controller authority or coordination topology being removed",
+        "Protects ExternalApiController and the stated authorization, tenancy, data, and UX envelope",
+        "Prefers a complete coherent collapse over tiny endpoint-by-endpoint cleanup",
+        "Includes representative authenticated runtime verification in addition to builds or tests"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "A legacy Excel export uses EPPlus AutoFit on Windows. During a cross-platform migration, the new implementation calculates approximate column widths from string lengths. All content tests pass and the workbook is readable. The team says this preserves the export and wants to delete the legacy exporter. Assess whether the compression is complete and what should happen next; do not edit code.",
+      "expected_output": "The response rejects the unproven equivalence claim, preserves or restores the exact authority until an accepted revision or real rendering boundary exists, and records the cross-platform renderer as an unresolved architectural lane.",
+      "files": [],
+      "assertions": [
+        "Does not call approximate sizing exact preservation",
+        "Separates exact preservation from an explicitly accepted behavior revision",
+        "Keeps or restores the legacy rendering authority while equivalence is unresolved",
+        "Proposes artifact-level verification rather than relying only on content tests"
+      ]
+    }
+  ]
+}

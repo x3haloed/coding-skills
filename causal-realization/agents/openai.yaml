@@ -1,0 +1,4 @@
+interface:
+  display_name: "Causal Realization"
+  short_description: "Make capabilities exist as real causal paths"
+  default_prompt: "Use $causal-realization to make this capability real and verify its complete input-to-output path."

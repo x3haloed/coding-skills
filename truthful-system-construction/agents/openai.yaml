@@ -1,0 +1,4 @@
+interface:
+  display_name: "Truthful System Construction"
+  short_description: "Orchestrate realization and compression"
+  default_prompt: "Use $truthful-system-construction to build the smallest truthful system that realizes this capability."

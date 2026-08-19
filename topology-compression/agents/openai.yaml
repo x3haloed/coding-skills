@@ -1,0 +1,4 @@
+interface:
+  display_name: "Topology Compression"
+  short_description: "Compress architecture while preserving behavior"
+  default_prompt: "Use $topology-compression to reduce this system’s architectural topology without losing required behavior."
