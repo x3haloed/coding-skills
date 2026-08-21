@@ -2,5 +2,26 @@
   "name": "coding-skills",
   "version": "0.1.0",
   "description": "Skills for realizing software capabilities and compressing system topology and embodiment without losing required behavior.",
-  "skills": "./skills/"
+  "author": {
+    "name": "Coding Skills Contributors"
+  },
+  "repository": "https://github.com/x3haloed/coding-skills",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Coding Skills",
+    "shortDescription": "Build truthful, simpler software systems",
+    "longDescription": "Realize complete software capabilities, compress architectural topology, reduce physical machinery, and orchestrate those disciplines together.",
+    "developerName": "Coding Skills Contributors",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Software architecture",
+      "Capability realization",
+      "System compression"
+    ],
+    "defaultPrompt": [
+      "Make this software capability real end to end.",
+      "Simplify this architecture without losing behavior.",
+      "Build the smallest truthful system for this requirement."
+    ]
+  }
 }
