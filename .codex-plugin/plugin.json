@@ -1,0 +1,6 @@
+{
+  "name": "coding-skills",
+  "version": "0.1.0",
+  "description": "Skills for realizing software capabilities and compressing system topology and embodiment without losing required behavior.",
+  "skills": "./skills/"
+}
