@@ -15,10 +15,24 @@ Map architecture in four kinds of topology:
 
 - **Authority:** a place that decides policy, behavior, state transitions, or ownership.
 - **Representation:** a persisted, transmitted, rendered, or in-memory form that other code must translate or synchronize.
-- **Boundary:** a module, process, service, application, tenant, trust, or operational division that contains responsibility.
+- **Boundary:** a module, process, service, application, tenant, trust, or operational division that contains responsibility. Ownership, coordination, and presentation boundaries can differ; see Boundary Fit.
 - **Coordination edge:** a dependency, translation, synchronization step, compatibility bridge, shared mutation, or ordering constraint between authorities, representations, or boundaries.
 
 Compression removes or composes these elements so the system tells fewer, more truthful stories. Line count is evidence only when it reflects that structural change.
+
+## Boundary Fit
+
+Do not assume that state ownership, coordination, and presentation share the same topology:
+
+- **Ownership boundary:** who may decide state transitions and enforce invariants.
+- **Coordination boundary:** which activities must act together, and at what cadence, to produce a correct result.
+- **Presentation boundary:** which visible regions or external projections can be composed or updated independently.
+
+A useful boundary encloses closely coupled behavior behind a stable, comprehensible contract. Assess the **consequence footprint** of changes (what else can be affected) and the **coordination pressure** at the boundary (how frequently and tightly other parts must interact across it). Repeated cross-boundary negotiation for one coherent operation can mean the boundary is misplaced; broad consequences do not, by themselves, justify global state ownership.
+
+Visual hierarchies, domain models, transaction scopes, workflows, and rendering pipelines may have different boundaries. A renderer may compose the whole screen from independently owned state. A form may represent and edit a domain entity without owning its authority. Distinguish **unified coordination** from **unified ownership**: a single interaction or rendering process may need to observe many entities without acquiring their authority or turning them into one globally mutable state object. Do not merge independent authorities merely because their outputs must be coordinated.
+
+Compression may remove, move, split, or introduce boundaries when the result reduces unnecessary cross-boundary coordination and remains locally interpretable. Counting boundaries alone is not a measure of compression.
 
 ## Iteration Loop
 
@@ -29,6 +43,8 @@ Trace the behavior before choosing an edit:
 - entry points and user-visible workflows
 - authorities that decide the same or adjacent behavior
 - representations and translations
+- ownership, coordination, and presentation boundaries where relevant
+- consequence footprint and coordination pressure at each relevant boundary
 - persisted-data meaning
 - callers, consumers, registrations, and operational jobs
 - external and published contracts
@@ -40,6 +56,14 @@ Treat “no current caller” as weak evidence. It may mean obsolete code, an un
 Produce a topology statement concise enough to test:
 
 > Behavior X is currently decided by A and B, represented as C and D, and coordinated through edges E and F.
+
+Test whether those boundaries fit the behavior:
+
+- Which invariants and decisions genuinely require shared ownership?
+- Which effects are local, which spread widely, and which must be coordinated synchronously or continuously?
+- Are apparent dependencies caused by domain semantics, or by accidental UI composition, storage layout, or framework structure?
+- Could one coordinator or projection compose independent state without becoming its authority?
+- If a boundary moves, which coordination edges disappear and which new ones appear?
 
 ### 2. Establish the preservation envelope
 
@@ -68,18 +92,22 @@ When required meaning is absent from code, tests, contracts, or fixtures, surfac
 
 ### 3. Rank coherent compression candidates
 
-Prefer candidates that completely remove meaningful topology:
+Prefer candidates that completely remove meaningful topology, or that relocate an ill-fitting boundary and thereby eliminate named coordination edges:
 
 - one authority absorbs a duplicate authority
 - one workflow composes a parallel workflow
 - one canonical representation replaces synchronized forms
 - an unnecessary boundary or bridge disappears
 - a cross-cutting rule moves to the boundary that owns it
+- tightly coupled activity moves behind one coherent contract without fusing unrelated authorities
+- a shared projection or orchestrator replaces unnecessary state lifting or cross-component negotiation
 
 Estimate each candidate by:
 
 - topology removed
 - future coordination avoided
+- consequence footprint and coordination pressure before and after
+- new edges and internal complexity created by moving or adding boundaries
 - confidence in the preservation envelope
 - verification strength
 - rollback and checkpoint coherence
@@ -89,6 +117,7 @@ Choose the largest candidate that remains one understandable collapse. Reject:
 - tiny edits that move code but leave all authorities and edges alive
 - massive edits whose preservation envelope cannot be proved
 - bundles of unrelated cleanup disguised as one architectural move
+- finer boundaries that increase cross-boundary negotiation on the behavior's critical path
 
 ### 4. Execute a complete collapse
 
@@ -138,8 +167,8 @@ Then remap the topology created by the collapse. Removed callers often expose re
 Treat compression as locally complete only when all of these hold:
 
 1. Every remaining boundary is internally interpretable: its behavior can be understood and changed from its owned concepts, state, invariants, and explicit contracts without reconstructing hidden authority elsewhere.
-2. Every remaining cross-boundary edge represents necessary, explicit coordination.
-3. No evidence-supported collapse can materially reduce authorities, representations, boundaries, or coordination edges without violating the preservation envelope or making either side less interpretable.
+2. Every remaining cross-boundary edge represents necessary, explicit coordination, and the remaining boundaries follow genuine ownership and coordination needs rather than visual component nesting, storage layout, or framework conventions.
+3. No evidence-supported collapse or boundary redraw can materially reduce authorities, representations, unnecessary coordination, or consequence footprint without violating the preservation envelope or making the surviving parts less interpretable.
 
 Interpretability alone is insufficient. One giant boundary can be self-contained but incomprehensible; duplicated truth can make boundaries look locally complete while creating synchronization topology. Preserve boundaries that carry distinct authority, failure containment, trust, scaling, operational, or coordination load.
 
@@ -176,6 +205,10 @@ The goal is not unattended activity. The goal is an agent that carries the archi
 | Cached or incremental verification conceals removed dependencies | Clean generated and compiled state, then rebuild and rerun the relevant suite |
 | The agent stops after one successful refactor | Remap and continue until the local fixed-point test holds |
 | The agent keeps compressing past meaning | Protect irreducible boundaries and stop when remaining edges carry named load |
+| Screen or component nesting dictates domain state ownership | Separate presentation topology from authoritative state and transition boundaries |
+| Continuous, tightly coordinated interaction is fragmented into independent controls | Place coordination at the interaction's natural scope while retaining local ownership where useful |
+| A shared projection becomes a giant shared state owner | Centralize composition or orchestration, not unrelated authorities |
+| Every entity gets a boundary regardless of interaction cost | Test consequence footprint, coordination pressure, and contract stability; redraw boundaries where they create unnecessary negotiation |
 
 ## Iteration Report
 
@@ -183,13 +216,13 @@ Keep the report compact:
 
 ```markdown
 ## Topology
-[Current authorities, representations, boundaries, and coordination edges]
+[Current authorities, representations, boundaries, coordination edges, consequence footprint, and coordination pressure]
 
 ## Preservation envelope
 [Required behavior and authoritative evidence]
 
 ## Selected compression
-[What complete topology disappears and why this slice is coherent]
+[What complete topology disappears, or which boundaries move and which coordination edges that eliminates, and why this is the coherent scale]
 
 ## Verification
 [Build, tests, runtime, data, integrations, and known gaps]

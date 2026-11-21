@@ -36,6 +36,33 @@
         "Keeps or restores the legacy rendering authority while equivalence is unresolved",
         "Proposes artifact-level verification rather than relying only on content tests"
       ]
+    },
+    {
+      "id": 4,
+      "prompt": "Our React scheduling app shows a calendar grid, a sidebar of unassigned shifts, and a conflict banner on one screen. Because all three render together, the team moved shifts, staff availability, assignment rules, and banner/drag UI state into a single global Redux store, and every reducer now reads and writes the whole object. Changing an assignment rule regularly breaks drag behavior, and unrelated panels re-render. A colleague proposes going further and folding the backend availability service into the same store model so everything stays consistent. Propose the highest-value topology compression and how you would verify it; do not edit code.",
+      "expected_output": "The response separates presentation composition from state ownership, keeps assignment-rule and availability authority with their owning domain (not the screen store), places the continuous drag/conflict coordination at the interaction's scope through a projection or coordinator, rejects folding the backend service into the global store, and verifies interaction and rule behavior.",
+      "files": [],
+      "assertions": [
+        "Identifies that screen co-rendering was used to justify shared state ownership and separates presentation boundaries from ownership boundaries",
+        "Rejects extending the global store to absorb the backend availability authority",
+        "Proposes a shared projection or coordinator for the drag/conflict interaction that observes state without owning unrelated authorities",
+        "Names which coordination edges disappear and which new contracts or edges appear",
+        "Verifies drag and conflict interaction behavior and assignment-rule outcomes, not only reducer unit tests"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "An order flow was split into PricingService, InventoryService, PromotionService, and TaxService. Placing one order requires a chain of nine synchronous calls among them, including PricingService calling PromotionService, which calls PricingService back to recompute the discounted price. Every pricing change ships coordinated releases of three services, and partial failures leave reservations that a nightly job reconciles. TaxService is also used by invoicing and a published partner API, and inventory is shared by a warehouse system. The team wants to reduce this cost without a big-bang merge of everything. Propose the highest-value topology compression and how you would verify it; do not edit code.",
+      "expected_output": "The response identifies the pricing/promotion boundary as misplaced because of high coordination pressure on one coherent operation, proposes moving tightly coupled price computation behind one contract while keeping tax and inventory as separate authorities with external consumers, accounts for the reconciliation job, and verifies order outcomes, failure behavior, and published contracts.",
+      "files": [],
+      "assertions": [
+        "Treats the repeated pricing/promotion round-trips as evidence of a misplaced boundary rather than proposing finer services or more orchestration",
+        "Collapses or co-locates the tightly coupled pricing and promotion computation behind one coherent contract",
+        "Keeps TaxService and inventory as distinct authorities because of their independent consumers and published contracts",
+        "Does not propose merging all four services into one owner",
+        "Addresses the partial-failure reservations and nightly reconciliation as part of the preservation envelope or coordination topology",
+        "Includes verification of order totals, failure and compensation behavior, and the partner API contract"
+      ]
     }
   ]
 }
